@@ -23,6 +23,7 @@ const userSchema = new mongoose.Schema({
             min: MIN_OTP,
             max: MAX_OTP
         },
+        // todo: use Date type here
         expiresAt: Number
     },
     properties: [{
@@ -36,9 +37,12 @@ const userSchema = new mongoose.Schema({
 userSchema.methods.generateOTP = () => {
     const code = randomInt(MIN_OTP, MAX_OTP);
 
+    // todo: use UTC methods here
     const expiresAt = Date.now() + OTP_VALIDITY_IN_MILLISECONDS;
 
     return { code, expiresAt };
+
+    // idea: set this.otp and return this
 }
 
 const User = mongoose.model('User', userSchema);
