@@ -1,8 +1,9 @@
 import { StatusCodes } from 'http-status-codes';
+import { MongoServerError } from 'mongodb';
+import { validationResult, matchedData } from 'express-validator';
 
 import User from '../mongodb/models/user.js';
 import nodemailer from '../mail/nodemailer.js';
-import { MongoServerError } from 'mongodb';
 
 const DUPLICATE_KEY_ERROR_CODE = 11000;
 
@@ -12,7 +13,13 @@ const findUser = async (req, res) => {};
 // todo: implement input validation
 const createUser = async (req, res) => {
     try {
-        const { name, email } = req.body;
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty) {
+            res.status(StatusCodes.BAD_REQUEST).json({ errors: errors.array() });
+        }
+
+        const { name, email } = matchedData(req);
 
         // idea: remove below & do new User(...) & user.generateOTP().save()
         const otp = new User().generateOTP();
