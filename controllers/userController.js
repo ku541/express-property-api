@@ -32,7 +32,6 @@ const createUser = async (req, res) => {
             text: `Your login code is ${otp.code}. It expires in 10 minutes.`
         });
 
-        // todo: remove otp from user before sending
         res.status(StatusCodes.CREATED).json(user);
     } catch (error) {
         console.error(error);

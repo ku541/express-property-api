@@ -6,6 +6,12 @@ const MIN_OTP = 100000;
 const MAX_OTP = 999999;
 const OTP_VALIDITY_IN_MILLISECONDS = 10 * 60 * 1000;
 
+const transformUser = (doc, ret) => {
+    delete ret.otp;
+
+    return ret;
+}
+
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -31,7 +37,8 @@ const userSchema = new mongoose.Schema({
         ref: 'Property'
     }]
 },{
-    timestamps: true
+    timestamps: true,
+    toJSON: { transform: transformUser }
 });
 
 userSchema.methods.generateOTP = () => {
