@@ -10,7 +10,6 @@ const DUPLICATE_KEY_ERROR_CODE = 11000;
 const getAllUsers = async (req, res) => {};
 const findUser = async (req, res) => {};
 
-// todo: implement input validation
 const createUser = async (req, res) => {
     try {
         const errors = validationResult(req);
@@ -29,12 +28,11 @@ const createUser = async (req, res) => {
         nodemailer.sendMail({
             from: `${process.env.MAIL_FROM_NAME} ${process.env.MAIL_FROM_ADDRESS}`,
             to: `${user.name} ${user.email}`,
-            // todo: add [MAIL_FROM_NAME] to subject
-            // todo: add expires in to subject
-            subject: 'Login OTP',
-            text: `${otp.code}`
+            subject: `Your login code is ${otp.code}`,
+            text: `Your login code is ${otp.code}. It expires in 10 minutes.`
         });
 
+        // todo: remove otp from user before sending
         res.status(StatusCodes.CREATED).json(user);
     } catch (error) {
         console.error(error);
