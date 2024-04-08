@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 
 const MIN_OTP = 100000;
 const MAX_OTP = 999999;
-const OTP_VALIDITY_IN_MILLISECONDS = 10 * 60 * 1000;
+export const OTP_VALIDITY_IN_MINUTES = 10;
 
 const transformUser = (doc, ret) => {
     delete ret.otp;
@@ -29,8 +29,7 @@ const userSchema = new mongoose.Schema({
             min: MIN_OTP,
             max: MAX_OTP
         },
-        // todo: use Date type here
-        expiresAt: Number
+        expiresAt: Date
     },
     properties: [{
         type: mongoose.Schema.Types.ObjectId,
@@ -41,15 +40,16 @@ const userSchema = new mongoose.Schema({
     toJSON: { transform: transformUser }
 });
 
-userSchema.methods.generateOTP = () => {
+userSchema.methods.generateOTP = function () {
     const code = randomInt(MIN_OTP, MAX_OTP);
 
-    // todo: use UTC methods here
-    const expiresAt = Date.now() + OTP_VALIDITY_IN_MILLISECONDS;
+    const expiresAt = new Date;
 
-    return { code, expiresAt };
+    expiresAt.setUTCMinutes(expiresAt.getUTCMinutes() + OTP_VALIDITY_IN_MINUTES);
 
-    // idea: set this.otp and return this
+    this.otp = { code, expiresAt };
+
+    return this;
 }
 
 const User = mongoose.model('User', userSchema);
