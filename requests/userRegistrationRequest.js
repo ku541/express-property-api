@@ -1,6 +1,6 @@
 import { body } from 'express-validator';
 
-export const userRegistrationRequest = [
+const userRegistrationRequest = [
     body('name')
         .trim()
         .notEmpty()
@@ -17,3 +17,7 @@ export const userRegistrationRequest = [
         .withMessage('Email must be a valid email address.')
         .normalizeEmail()
 ];
+
+export {
+    userRegistrationRequest
+};

@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 
 const MIN_OTP = 100000;
 const MAX_OTP = 999999;
-export const OTP_VALIDITY_IN_MINUTES = 10;
+const OTP_VALIDITY_IN_MINUTES = 10;
 
 const transformUser = (doc, ret) => {
     delete ret.otp;
@@ -54,4 +54,7 @@ userSchema.methods.generateOTP = function () {
 
 const User = mongoose.model('User', userSchema);
 
-export default User;
+export {
+    User as default,
+    OTP_VALIDITY_IN_MINUTES
+}
