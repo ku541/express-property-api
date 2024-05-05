@@ -1,7 +1,7 @@
 import { StatusCodes } from 'http-status-codes';
 import { validationResult } from 'express-validator';
 
-const respondIfInvalid = (req, res) => {
+const respondIfInvalidRequest = (req, res) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -11,5 +11,5 @@ const respondIfInvalid = (req, res) => {
 }
 
 export {
-    respondIfInvalid
+    respondIfInvalidRequest
 };

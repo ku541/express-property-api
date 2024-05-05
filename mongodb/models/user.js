@@ -56,5 +56,7 @@ const User = mongoose.model('User', userSchema);
 
 export {
     User as default,
-    OTP_VALIDITY_IN_MINUTES
+    OTP_VALIDITY_IN_MINUTES,
+    MIN_OTP,
+    MAX_OTP
 }

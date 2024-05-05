@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import { matchedData } from 'express-validator';
 
 import User from '../mongodb/models/user.js';
-import { respondIfInvalid } from '../helpers/validation.js';
+import { respondIfInvalidRequest } from '../helpers/validation.js';
 
 const DUPLICATE_KEY_ERROR_CODE = 11000;
 
@@ -12,7 +12,7 @@ const findUser = async (req, res) => {};
 
 const createUser = async (req, res) => {
     try {
-        respondIfInvalid(req, res);
+        respondIfInvalidRequest(req, res);
 
         const user = await User.create(matchedData(req));
 

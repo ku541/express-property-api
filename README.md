@@ -21,3 +21,7 @@
             - verify otp
             - update user (unset otp)
             - create jwt
+
+## To Do
+
+- [] use native env instead of dotenv
