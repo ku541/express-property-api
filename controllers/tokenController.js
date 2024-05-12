@@ -1,4 +1,4 @@
-import * as jose from 'jose';
+import { SignJWT } from 'jose';
 import { StatusCodes } from 'http-status-codes';
 import { matchedData } from 'express-validator';
 
@@ -21,7 +21,7 @@ const createToken = async (req, res) => {
 
         const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
-        const token = await new jose.SignJWT({ _id: user.id })
+        const token = await new SignJWT({ _id: user.id })
             .setProtectedHeader({ alg: process.env.JWT_ALGORITHM })
             .setIssuedAt()
             .setExpirationTime(process.env.JWT_EXPIRATION)
