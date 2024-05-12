@@ -17,11 +17,11 @@ const createToken = async (req, res) => {
             res.status(StatusCodes.BAD_REQUEST).json({ error: 'Invalid OTP' });
         }
 
-        delete user.otp;
+        await User.updateOne({ _id: user._id }, { $unset: { otp: 1 } });
 
         const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
-        const token = await new jose.SignJWT({ user })
+        const token = await new jose.SignJWT({ _id: user.id })
             .setProtectedHeader({ alg: process.env.JWT_ALGORITHM })
             .setIssuedAt()
             .setExpirationTime(process.env.JWT_EXPIRATION)
