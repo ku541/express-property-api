@@ -1,13 +1,17 @@
 import { jwtVerify } from 'jose';
 import { StatusCodes } from 'http-status-codes';
 
+import User from '../mongodb/models/user.js';
+
 const authentication = async (req, res, next) => {
     try {
         const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
         const token = req.header('Authorization').replace('Bearer ', '');
 
-        await jwtVerify(token, secret);
+        const { payload } = await jwtVerify(token, secret);
+
+        req.user = await User.findById(payload._id);
 
         next();
     } catch (error) {
