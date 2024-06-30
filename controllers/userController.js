@@ -12,9 +12,6 @@ import { respondIfInvalidRequest } from '../helpers/validation.js';
 const DUPLICATE_KEY_ERROR_CODE = 11000;
 const AVATAR_WIDTH = 256;
 
-const getAllUsers = async (req, res) => {};
-const findUser = async (req, res) => {};
-
 const createUser = async (req, res) => {
     try {
         respondIfInvalidRequest(req, res);
@@ -25,13 +22,17 @@ const createUser = async (req, res) => {
     } catch (error) {
         console.error(error);
 
-        if (error instanceof MongoServerError && error.code === DUPLICATE_KEY_ERROR_CODE) {
-            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
-                error: 'Email must be unique'
+        if (
+            error instanceof MongoServerError &&
+            error.code === DUPLICATE_KEY_ERROR_CODE
+        ) {
+            return res.status(StatusCodes.CONFLICT).send({
+                error: 'Email must be unique.'
             });
         }
 
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error);
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR)
+            .send({ error: error.message });
     }
 };
 
@@ -57,9 +58,8 @@ const updateUser = async (req, res) => {
             api_secret: process.env.CLOUDINARY_SECRET
         });
 
-        const uploaded = await cloudinary.uploader.upload(optimizedAvatarPath, {
-            asset_folder: 'avatars'
-        });
+        const uploaded = await cloudinary.uploader
+            .upload(optimizedAvatarPath, { asset_folder: 'avatars' });
 
         await unlink(`${process.env.MULTER_UPLOAD_PATH}/${req.file.filename}`);
         await unlink(optimizedAvatarPath);
@@ -73,19 +73,22 @@ const updateUser = async (req, res) => {
     } catch (error) {
         console.error(error);
 
-        if (error instanceof MongoServerError && error.code === DUPLICATE_KEY_ERROR_CODE) {
+        if (
+            error instanceof MongoServerError &&
+            error.code === DUPLICATE_KEY_ERROR_CODE
+        ) {
             return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
-                error: 'Email must be unique'
+                error: 'Email must be unique.'
             });
         }
 
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error);
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
+            error: 'An error occurred while creating the user.'
+        });
     }
 };
 
 export {
-    getAllUsers,
     createUser,
-    findUser,
     updateUser
 };

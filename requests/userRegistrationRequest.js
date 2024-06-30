@@ -16,7 +16,9 @@ const userRegistrationRequest = [
         .notEmpty()
         .withMessage('Name is required.')
         .isString()
-        .withMessage('Name must be a string.'),
+        .withMessage('Name must be a string.')
+        .isLength({ min: 2, max: 50 })
+        .withMessage('Name must be between 2 and 50 characters.'),
     validateEmailChain()
 ];
 

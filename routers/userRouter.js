@@ -1,10 +1,8 @@
 import { Router } from 'express';
 import multer from 'multer';
 
-import { 
-    getAllUsers,
+import {
     createUser,
-    findUser,
     updateUser
 } from '../controllers/userController.js';
 import { userRegistrationRequest } from '../requests/userRegistrationRequest.js';
@@ -29,9 +27,7 @@ const upload = multer({
     limits: { fileSize: ALLOWED_FILE_SIZE_IN_MB * 1024 * 1024 }
 });
 
-router.get('/', getAllUsers);
 router.post('/', userRegistrationRequest, createUser);
-router.get('/:id', findUser);
 router.patch('/', [
     authentication,
     upload.single('avatar'),
