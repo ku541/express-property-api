@@ -7,9 +7,14 @@ import { sendOTPMail } from '../helpers/mail.js';
 
 const createOTP = async (req, res) => {
     try {
-        respondIfInvalidRequest(req, res);
+        if (respondIfInvalidRequest(req, res)) return;
 
         const user = await User.findOne(matchedData(req));
+
+        if (!user) {
+            return res.status(StatusCodes.NOT_FOUND)
+                .send({ error: 'User not found.' });
+        }
 
         await user.generateOTP().save();
 
@@ -19,7 +24,8 @@ const createOTP = async (req, res) => {
     } catch (error) {
         console.error(error);
 
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error);
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR)
+            .send({ error: error.message });
     }
 }
 

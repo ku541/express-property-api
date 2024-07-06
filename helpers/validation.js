@@ -7,7 +7,11 @@ const respondIfInvalidRequest = (req, res) => {
     if (!errors.isEmpty()) {
         res.status(StatusCodes.BAD_REQUEST)
             .json({ errors: errors.array() });
+
+        return true;
     }
+
+    return false;
 }
 
 export {

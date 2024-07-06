@@ -14,7 +14,7 @@ const AVATAR_WIDTH = 256;
 
 const createUser = async (req, res) => {
     try {
-        respondIfInvalidRequest(req, res);
+        if (respondIfInvalidRequest(req, res)) return;
 
         const user = await User.create(matchedData(req));
 
@@ -38,7 +38,7 @@ const createUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
     try {
-        respondIfInvalidRequest(req, res);
+        if (respondIfInvalidRequest(req, res)) return;
 
         // todo: test without file
         // todo: replace existing avatar with incoming avatar

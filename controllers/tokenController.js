@@ -7,7 +7,7 @@ import { respondIfInvalidRequest } from '../helpers/validation.js';
 
 const createToken = async (req, res) => {
     try {
-        respondIfInvalidRequest(req, res);
+        if (respondIfInvalidRequest(req, res)) return;
 
         const validated = matchedData(req);
 
