@@ -13,6 +13,21 @@ const createToken = async (req, res) => {
 
         const user = await User.findOne({ email: validated.email });
 
+        if (!user) {
+            return res.status(StatusCodes.NOT_FOUND)
+                .send({ error: 'User not found.' });
+        }
+
+        if (!user.otp || !user.otp.code || !user.otp.expiresAt) {
+            return res.status(StatusCodes.NOT_FOUND)
+                .send({ error: 'No OTP found. Please request a new OTP.' })
+        }
+
+        if (new Date > user.otp.expiresAt) {
+            return res.status(StatusCodes.BAD_REQUEST)
+                .send({ error: 'OTP has expired. Please request a new OTP.' })
+        }
+
         if (Number(validated.otp) !== user.otp.code) {
             res.status(StatusCodes.BAD_REQUEST).json({ error: 'Invalid OTP' });
         }
@@ -31,7 +46,8 @@ const createToken = async (req, res) => {
     } catch (error) {
         console.error(error);
 
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error);
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR)
+            .send({ error: error.message });
     }
 }
 
