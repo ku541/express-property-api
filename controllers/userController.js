@@ -42,32 +42,36 @@ const updateUser = async (req, res) => {
 
         // todo: test without file
         // todo: replace existing avatar with incoming avatar
-
-        await mkdir(process.env.SHARP_UPLOAD_PATH, { recursive: true });
-
-        const optimizedAvatarPath = `${process.env.SHARP_UPLOAD_PATH}/${req.file.filename}`;
-
-        await sharp(req.file.path)
-            .resize(AVATAR_WIDTH)
-            .webp()
-            .toFile(optimizedAvatarPath);
-
-        cloudinary.config({
-            cloud_name: process.env.CLOUDINARY_CLOUD,
-            api_key: process.env.CLOUDINARY_KEY,
-            api_secret: process.env.CLOUDINARY_SECRET
-        });
-
-        const uploaded = await cloudinary.uploader
-            .upload(optimizedAvatarPath, { asset_folder: 'avatars' });
-
-        await unlink(`${process.env.MULTER_UPLOAD_PATH}/${req.file.filename}`);
-        await unlink(optimizedAvatarPath);
-
         const { name, email } = req.body;
-        const avatar = uploaded.secure_url;
 
-        await req.user.set({ name, email, avatar }).save();
+        if (req.file) {
+            await mkdir(process.env.SHARP_UPLOAD_PATH, { recursive: true });
+    
+            const optimizedAvatarPath = `${process.env.SHARP_UPLOAD_PATH}/${req.file.filename}`;
+    
+            await sharp(req.file.path)
+                .resize(AVATAR_WIDTH)
+                .webp()
+                .toFile(optimizedAvatarPath);
+    
+            cloudinary.config({
+                cloud_name: process.env.CLOUDINARY_CLOUD,
+                api_key: process.env.CLOUDINARY_KEY,
+                api_secret: process.env.CLOUDINARY_SECRET
+            });
+    
+            const uploaded = await cloudinary.uploader
+                .upload(optimizedAvatarPath, { asset_folder: 'avatars' });
+    
+            await unlink(`${process.env.MULTER_UPLOAD_PATH}/${req.file.filename}`);
+            await unlink(optimizedAvatarPath);
+    
+            const avatar = uploaded.secure_url;
+    
+            await req.user.set({ name, email, avatar }).save();
+        } else {
+            await req.user.set({ name, email }).save();
+        }
 
         return res.status(StatusCodes.OK).send(req.user);
     } catch (error) {
