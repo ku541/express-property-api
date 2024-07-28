@@ -40,8 +40,6 @@ const updateUser = async (req, res) => {
     try {
         if (respondIfInvalidRequest(req, res)) return;
 
-        // todo: test without file
-        // todo: replace existing avatar with incoming avatar
         const { name, email } = req.body;
 
         if (req.file) {
@@ -59,7 +57,16 @@ const updateUser = async (req, res) => {
                 api_key: process.env.CLOUDINARY_KEY,
                 api_secret: process.env.CLOUDINARY_SECRET
             });
+
+            const currentAvatarUrl = req.user.avatar;
     
+            if (currentAvatarUrl) {
+                const publicId = currentAvatarUrl.split('/').pop().split('.')
+                    .shift();
+
+                await cloudinary.uploader.destroy(publicId);
+            }
+
             const uploaded = await cloudinary.uploader
                 .upload(optimizedAvatarPath, { asset_folder: 'avatars' });
     
