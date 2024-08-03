@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
-import { createToken } from '../controllers/tokenController.js';
-import { createTokenRequest } from '../requests/createTokenRequest.js';
+import createToken from '../controllers/tokenController.js';
+import createTokenRequest from '../requests/createTokenRequest.js';
 
 const router = Router();
 

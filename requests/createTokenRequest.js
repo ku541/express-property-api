@@ -16,6 +16,4 @@ const createTokenRequest = [
         .withMessage(`OTP must be an integer between ${MIN_OTP} & ${MAX_OTP}`)
 ];
 
-export {
-    createTokenRequest
-};
+export default createTokenRequest;

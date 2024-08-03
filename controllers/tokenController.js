@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import { matchedData } from 'express-validator';
 
 import User from '../mongodb/models/user.js';
-import { respondIfInvalidRequest } from '../helpers/validation.js';
+import respondIfInvalidRequest from '../helpers/validation.js';
 
 const createToken = async (req, res) => {
     try {
@@ -51,4 +51,4 @@ const createToken = async (req, res) => {
     }
 }
 
-export { createToken };
+export default createToken;

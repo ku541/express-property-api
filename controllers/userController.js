@@ -7,7 +7,7 @@ import sharp from 'sharp';
 import { v2 as cloudinary } from 'cloudinary';
 
 import User from '../mongodb/models/user.js';
-import { respondIfInvalidRequest } from '../helpers/validation.js';
+import respondIfInvalidRequest from '../helpers/validation.js';
 
 const DUPLICATE_KEY_ERROR_CODE = 11000;
 const AVATAR_WIDTH = 256;

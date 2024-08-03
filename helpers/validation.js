@@ -14,6 +14,4 @@ const respondIfInvalidRequest = (req, res) => {
     return false;
 }
 
-export {
-    respondIfInvalidRequest
-};
+export default respondIfInvalidRequest;

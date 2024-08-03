@@ -11,6 +11,4 @@ const sendOTPMail = async (user) => {
     });
 }
 
-export {
-    sendOTPMail
-};
+export default sendOTPMail;

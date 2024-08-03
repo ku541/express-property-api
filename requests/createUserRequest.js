@@ -23,6 +23,6 @@ const createUserRequest = [
 ];
 
 export {
-    createUserRequest,
+    createUserRequest as default,
     validateEmailChain
 };

@@ -5,7 +5,7 @@ import {
     createUser,
     updateUser
 } from '../controllers/userController.js';
-import { createUserRequest } from '../requests/createUserRequest.js';
+import createUserRequest from '../requests/createUserRequest.js';
 import authentication from '../middlewares/authentication.js';
 import updateUserRequest from '../requests/updateUserRequest.js';
 import handleMulterErrors from '../middlewares/handleMulterErrors.js';
