@@ -2,9 +2,9 @@ import { body } from 'express-validator';
 
 import { MIN_OTP } from '../mongodb/models/user.js';
 import { MAX_OTP } from '../mongodb/models/user.js';
-import { validateEmailChain } from './userRegistrationRequest.js';
+import { validateEmailChain } from './createUserRequest.js';
 
-const userLoginRequest = [
+const createTokenRequest = [
     validateEmailChain(),
     body('otp')
         .trim()
@@ -17,5 +17,5 @@ const userLoginRequest = [
 ];
 
 export {
-    userLoginRequest
+    createTokenRequest
 };

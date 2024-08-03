@@ -5,9 +5,9 @@ import {
     createUser,
     updateUser
 } from '../controllers/userController.js';
-import { userRegistrationRequest } from '../requests/userRegistrationRequest.js';
+import { createUserRequest } from '../requests/createUserRequest.js';
 import authentication from '../middlewares/authentication.js';
-import userUpdateRequest from '../requests/userUpdateRequest.js';
+import updateUserRequest from '../requests/updateUserRequest.js';
 import handleMulterErrors from '../middlewares/handleMulterErrors.js';
 
 const router = Router();
@@ -27,12 +27,12 @@ const upload = multer({
     limits: { fileSize: ALLOWED_FILE_SIZE_IN_MB * 1024 * 1024 }
 });
 
-router.post('/', userRegistrationRequest, createUser);
+router.post('/', createUserRequest, createUser);
 router.patch('/', [
     authentication,
     upload.single('avatar'),
     handleMulterErrors,
-    userUpdateRequest
+    updateUserRequest
 ], updateUser);
 
 export default router;

@@ -10,7 +10,7 @@ const validateEmailChain = () => body('email')
     .withMessage('Email must be a valid email address.')
     .normalizeEmail();
 
-const userRegistrationRequest = [
+const createUserRequest = [
     body('name')
         .trim()
         .notEmpty()
@@ -23,6 +23,6 @@ const userRegistrationRequest = [
 ];
 
 export {
-    userRegistrationRequest,
+    createUserRequest,
     validateEmailChain
 };

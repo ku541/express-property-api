@@ -1,6 +1,6 @@
 import { body } from 'express-validator';
 
-const userUpdateRequest = [
+const updateUserRequest = [
     body('name')
         .optional()
         .trim()
@@ -14,4 +14,4 @@ const userUpdateRequest = [
         .normalizeEmail()
 ];
 
-export default userUpdateRequest;
+export default updateUserRequest;

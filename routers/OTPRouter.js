@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { validateEmailChain } from '../requests/userRegistrationRequest.js';
+import { validateEmailChain } from '../requests/createUserRequest.js';
 import { createOTP } from '../controllers/OTPController.js';
 
 const router = Router();
