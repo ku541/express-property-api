@@ -1,8 +1,8 @@
 import { body } from 'express-validator';
 
+import { validateEmailChain } from './createUserRequest.js';
 import { MIN_OTP } from '../mongodb/models/user.js';
 import { MAX_OTP } from '../mongodb/models/user.js';
-import { validateEmailChain } from './createUserRequest.js';
 
 const createTokenRequest = [
     validateEmailChain(),

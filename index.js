@@ -1,12 +1,12 @@
 import express from 'express';
-import 'dotenv/config';
 import cors from 'cors';
+import 'dotenv/config';
 
-import connectDB from './mongodb/connect.js';
-import OTPRouter from './routers/OTPRouter.js';
 import userRouter from './routers/userRouter.js';
+import OTPRouter from './routers/OTPRouter.js';
 import tokenRouter from './routers/tokenRouter.js';
 import propertyRouter from './routers/propertyRouter.js';
+import connectDB from './mongodb/connect.js';
 
 const app = express();
 

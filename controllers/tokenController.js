@@ -1,9 +1,9 @@
-import { SignJWT } from 'jose';
-import { StatusCodes } from 'http-status-codes';
 import { matchedData } from 'express-validator';
+import { StatusCodes } from 'http-status-codes';
+import { SignJWT } from 'jose';
 
-import User from '../mongodb/models/user.js';
 import respondIfInvalidRequest from '../helpers/validation.js';
+import User from '../mongodb/models/user.js';
 
 const createToken = async (req, res) => {
     try {

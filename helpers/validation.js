@@ -1,5 +1,5 @@
-import { StatusCodes } from 'http-status-codes';
 import { validationResult } from 'express-validator';
+import { StatusCodes } from 'http-status-codes';
 
 const respondIfInvalidRequest = (req, res) => {
     const errors = validationResult(req);

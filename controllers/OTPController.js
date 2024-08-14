@@ -1,8 +1,8 @@
-import { StatusCodes } from 'http-status-codes';
 import { matchedData } from 'express-validator';
+import { StatusCodes } from 'http-status-codes';
 
-import User from '../mongodb/models/user.js';
 import respondIfInvalidRequest from '../helpers/validation.js';
+import User from '../mongodb/models/user.js';
 import sendOTPMail from '../helpers/mail.js';
 
 const createOTP = async (req, res) => {

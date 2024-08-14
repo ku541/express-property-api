@@ -1,13 +1,13 @@
 import { mkdir, unlink } from 'node:fs/promises';
 
-import { MongoServerError } from 'mongodb';
 import { StatusCodes } from 'http-status-codes';
+import { MongoServerError } from 'mongodb';
 import { matchedData } from 'express-validator';
 import sharp from 'sharp';
 import { v2 as cloudinary } from 'cloudinary';
 
-import User from '../mongodb/models/user.js';
 import respondIfInvalidRequest from '../helpers/validation.js';
+import User from '../mongodb/models/user.js';
 
 const DUPLICATE_KEY_ERROR_CODE = 11000;
 const AVATAR_WIDTH = 256;
