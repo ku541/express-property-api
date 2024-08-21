@@ -1,13 +1,15 @@
-import { mkdir, unlink } from 'node:fs/promises';
-
 import { StatusCodes } from 'http-status-codes';
 import { MongoServerError } from 'mongodb';
 import { matchedData } from 'express-validator';
-import sharp from 'sharp';
-import { v2 as cloudinary } from 'cloudinary';
 
 import respondIfInvalidRequest from '../helpers/validation.js';
 import User from '../mongodb/models/user.js';
+import {
+    optimize,
+    configureCloudinary,
+    uploadAndCleanUp,
+    destroy
+} from '../helpers/image.js';
 
 const DUPLICATE_KEY_ERROR_CODE = 11000;
 const AVATAR_WIDTH = 256;
@@ -43,38 +45,16 @@ const updateUser = async (req, res) => {
         const { name, email } = req.body;
 
         if (req.file) {
-            await mkdir(process.env.SHARP_UPLOAD_PATH, { recursive: true });
-    
-            const optimizedAvatarPath = `${process.env.SHARP_UPLOAD_PATH}/${req.file.filename}`;
-    
-            await sharp(req.file.path)
-                .resize(AVATAR_WIDTH)
-                .webp()
-                .toFile(optimizedAvatarPath);
-    
-            cloudinary.config({
-                cloud_name: process.env.CLOUDINARY_CLOUD,
-                api_key: process.env.CLOUDINARY_KEY,
-                api_secret: process.env.CLOUDINARY_SECRET
-            });
+            const optimizedAvatarPath = await optimize(req, AVATAR_WIDTH);
 
-            const currentAvatarUrl = req.user.avatar;
-    
-            if (currentAvatarUrl) {
-                const publicId = currentAvatarUrl.split('/').pop().split('.')
-                    .shift();
+            configureCloudinary();
 
-                await cloudinary.uploader.destroy(publicId);
+            const avatar = await uploadAndCleanUp(optimizedAvatarPath, 'avatars', req);
+
+            if (req.user.avatar) {
+                await destroy(req.user.avatar);
             }
 
-            const uploaded = await cloudinary.uploader
-                .upload(optimizedAvatarPath, { asset_folder: 'avatars' });
-    
-            await unlink(`${process.env.MULTER_UPLOAD_PATH}/${req.file.filename}`);
-            await unlink(optimizedAvatarPath);
-    
-            const avatar = uploaded.secure_url;
-    
             await req.user.set({ name, email, avatar }).save();
         } else {
             await req.user.set({ name, email }).save();
