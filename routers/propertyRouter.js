@@ -7,12 +7,21 @@ import {
     updateProperty,
     deleteProperty
 } from '../controllers/propertyController.js';
+import authentication from '../middlewares/authentication.js';
+import { upload } from '../helpers/image.js';
+import handleMulterErrors from '../middlewares/handleMulterErrors.js';
+import createPropertyRequest from '../requests/createPropertyRequest.js';
 
 const router = Router();
 
 router.get('/', getAllProperties);
 router.get('/:id', findProperty);
-router.post('/', createProperty);
+router.post('/', [
+    authentication,
+    upload.single('image'),
+    handleMulterErrors,
+    createPropertyRequest
+], createProperty);
 router.patch('/:id', updateProperty);
 router.delete('/:id', deleteProperty);
 
