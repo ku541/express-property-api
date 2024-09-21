@@ -1,5 +1,8 @@
 import { body } from 'express-validator';
 
+const MIN_NAME_LENGTH = 2;
+const MAX_NAME_LENGTH = 50;
+
 const validateEmailChain = () => body('email')
     .trim()
     .notEmpty()
@@ -17,8 +20,8 @@ const createUserRequest = [
         .withMessage('Name is required.')
         .isString()
         .withMessage('Name must be a string.')
-        .isLength({ min: 2, max: 50 })
-        .withMessage('Name must be between 2 and 50 characters.'),
+        .isLength({ min: MIN_NAME_LENGTH, max: MAX_NAME_LENGTH })
+        .withMessage(`Name must be between ${MIN_NAME_LENGTH} and ${MAX_NAME_LENGTH} characters.`),
     validateEmailChain()
 ];
 
