@@ -12,7 +12,41 @@ import Property from '../mongodb/models/property.js';
 
 const IMAGE_WIDTH = 1024;
 
-const getAllProperties = async (req, res) => { };
+const getProperties = async (req, res) => {
+    try {
+        if (respondIfInvalidRequest(req, res)) return;
+
+        const { page = 1, limit = 10 } = req.query;
+
+        const skip = (page - 1) * limit;
+
+        const properties = await Property.find()
+            .skip(skip)
+            .limit(limit)
+            .lean();
+
+        if (!properties.length) {
+            return res.status(StatusCodes.NOT_FOUND)
+                .send({ error: 'Properties not found.' });
+        }
+
+        const total = await Property.countDocuments();
+
+        return res.status(StatusCodes.OK).json({
+            total,
+            page,
+            limit,
+            pages: Math.ceil(total/limit),
+            data: properties
+        });
+    } catch (error) {
+        console.error(error);
+
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR)
+            .send({ error: error.message });
+    }
+};
+
 const findProperty = async (req, res) => { };
 
 const createProperty = async (req, res) => {
@@ -53,7 +87,7 @@ const updateProperty = async (req, res) => { };
 const deleteProperty = async (req, res) => { };
 
 export {
-    getAllProperties,
+    getProperties,
     findProperty,
     createProperty,
     updateProperty,

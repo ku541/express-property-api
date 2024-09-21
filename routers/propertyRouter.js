@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 import {
-    getAllProperties,
+    getProperties,
     findProperty,
     createProperty,
     updateProperty,
@@ -11,10 +11,14 @@ import authentication from '../middlewares/authentication.js';
 import { upload } from '../helpers/image.js';
 import handleMulterErrors from '../middlewares/handleMulterErrors.js';
 import createPropertyRequest from '../requests/createPropertyRequest.js';
+import getPropertiesRequest from '../requests/getPropertiesRequest.js';
 
 const router = Router();
 
-router.get('/', getAllProperties);
+router.get('/', [
+    authentication,
+    getPropertiesRequest
+], getProperties);
 router.get('/:id', findProperty);
 router.post('/', [
     authentication,
