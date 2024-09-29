@@ -8,6 +8,8 @@ const propertySchema = new mongoose.Schema({
     price: { type: Number, required: true },
     image: { type: String, required: true },
     owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+},{
+    timestamps: true
 });
 
 const Property = mongoose.model('Property', propertySchema);
