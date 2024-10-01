@@ -16,14 +16,31 @@ const getProperties = async (req, res) => {
     try {
         if (respondIfInvalidRequest(req, res)) return;
 
-        const { page = 1, limit = 10 } = req.query;
-
+        const {
+            page = 1,
+            limit = 10,
+            type = '',
+            title = '',
+            sort = 'createdAt',
+            order = 'desc'
+        } = matchedData(req);
         const skip = (page - 1) * limit;
 
-        const properties = await Property.find()
+        const query = {};
+
+        if (type) {
+            query.type = type;
+        }
+
+        if (title) {
+            query.title = { $regex: title, $options: 'i' };
+        }
+
+        const properties = await Property.find(query)
             .skip(skip)
             .limit(limit)
-            .lean();
+            .sort([[sort, order]])
+            .exec();
 
         if (!properties.length) {
             return res.status(StatusCodes.NOT_FOUND)

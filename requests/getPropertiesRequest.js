@@ -16,7 +16,27 @@ const getPropertiesRequest = [
         .optional()
         .isInt({ min: MIN_LIMIT, max: MAX_LIMIT })
         .withMessage('Limit must be between ')
-        .toInt()
+        .toInt(),
+    query('type')
+        .trim()
+        .optional()
+        .isAlphanumeric(process.env.APP_LOCALE, { ignore: ' ' })
+        .withMessage('Type must contain only letters, numbers & spaces.'),
+    query('title')
+        .trim()
+        .optional()
+        .isAlphanumeric(process.env.APP_LOCALE, { ignore: ' ' })
+        .withMessage('Type must contain only letters, numbers & spaces.'),
+    query('sort')
+        .trim()
+        .optional()
+        .isIn(['price', 'createdAt', 'updatedAt'])
+        .withMessage('Sort must be price, createdAt or updatedAt.'),
+    query('order')
+        .trim()
+        .optional()
+        .isIn(['asc', 'desc'])
+        .withMessage('Order must be asc or desc.')
 ];
 
 export default getPropertiesRequest;
