@@ -64,7 +64,27 @@ const getProperties = async (req, res) => {
     }
 };
 
-const findProperty = async (req, res) => { };
+const findProperty = async (req, res) => {
+    try {
+        if (respondIfInvalidRequest(req, res)) return;
+
+        const property = await Property.findById(req.params.id)
+            .lean()
+            .populate('owner');
+
+        if (! property) {
+            return res.status(StatusCodes.NOT_FOUND)
+                .send({ error: 'Property not found.' });
+        }
+
+        return res.status(StatusCodes.OK).json(property);
+    } catch (error) {
+        console.error(error);
+
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR)
+            .send({ error: error.message });
+    }
+};
 
 const createProperty = async (req, res) => {
     try {
