@@ -100,10 +100,9 @@ const createProperty = async (req, res) => {
 
         session.startTransaction();
 
-        const property = await Property.create([
-            { ...matchedData(req), image, owner: req.user._id }],
-            { session }
-        );
+        const property = new Property({ ...matchedData(req), image, owner: req.user._id });
+
+        await property.save({ session });
 
         req.user.properties.push(property._id);
 
