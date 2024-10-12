@@ -87,6 +87,8 @@ const findProperty = async (req, res) => {
 };
 
 const createProperty = async (req, res) => {
+    const session = await mongoose.startSession();
+
     try {
         if (respondIfInvalidRequest(req, res)) return;
 
@@ -95,8 +97,6 @@ const createProperty = async (req, res) => {
         const optimizedImagePath = await optimize(req, IMAGE_WIDTH);
 
         const image = await uploadAndCleanUp(optimizedImagePath, 'properties', req);
-
-        const session = await mongoose.startSession();
 
         session.startTransaction();
 
@@ -112,10 +112,14 @@ const createProperty = async (req, res) => {
 
         return res.status(StatusCodes.CREATED).json(property);
     } catch (error) {
+        await session.abortTransaction();
+
         console.error(error);
 
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR)
             .send({ error: error.message });
+    } finally {
+        await session.endSession();
     }
 };
 
