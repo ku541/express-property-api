@@ -15,7 +15,7 @@ const getPropertiesRequest = [
         .trim()
         .optional()
         .isInt({ min: MIN_LIMIT, max: MAX_LIMIT })
-        .withMessage('Limit must be between ')
+        .withMessage(`Limit must be between ${MIN_LIMIT} & ${MAX_LIMIT}`)
         .toInt(),
     query('type')
         .trim()

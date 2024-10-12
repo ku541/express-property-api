@@ -40,7 +40,7 @@ const getProperties = async (req, res) => {
             .skip(skip)
             .limit(limit)
             .sort([[sort, order]])
-            .exec();
+            .lean();
 
         if (!properties.length) {
             return res.status(StatusCodes.NOT_FOUND)
