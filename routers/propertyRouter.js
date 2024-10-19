@@ -13,6 +13,7 @@ import handleMulterErrors from '../middlewares/handleMulterErrors.js';
 import createPropertyRequest from '../requests/createPropertyRequest.js';
 import getPropertiesRequest from '../requests/getPropertiesRequest.js';
 import findPropertyRequest from '../requests/findPropertyRequest.js';
+import checkPropertyOwnership from '../middlewares/checkPropertyOwnership.js';
 
 const router = Router();
 
@@ -31,6 +32,10 @@ router.post('/', [
     createPropertyRequest
 ], createProperty);
 router.patch('/:id', updateProperty);
-router.delete('/:id', deleteProperty);
+router.delete('/:id', [
+    authentication,
+    findPropertyRequest,
+    checkPropertyOwnership
+], deleteProperty);
 
 export default router;

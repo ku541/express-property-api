@@ -6,7 +6,8 @@ import respondIfInvalidRequest from '../helpers/validation.js';
 import {
     configureCloudinary,
     optimize,
-    uploadAndCleanUp
+    uploadAndCleanUp,
+    destroy
 } from '../helpers/image.js';
 import Property from '../mongodb/models/property.js';
 
@@ -98,8 +99,6 @@ const createProperty = async (req, res) => {
 
         const image = await uploadAndCleanUp(optimizedImagePath, 'properties', req);
 
-        session.startTransaction();
-
         const property = new Property({ ...matchedData(req), image, owner: req.user._id });
 
         await property.save({ session });
@@ -124,7 +123,39 @@ const createProperty = async (req, res) => {
 };
 
 const updateProperty = async (req, res) => { };
-const deleteProperty = async (req, res) => { };
+
+const deleteProperty = async (req, res) => {
+    const session = await mongoose.startSession();
+
+    session.startTransaction();
+
+    try {
+        if (respondIfInvalidRequest(req, res)) return;
+
+        configureCloudinary();
+
+        await destroy(req.property.image);
+
+        req.user.properties.pull(req.property._id);
+
+        await req.user.save();
+
+        await req.property.deleteOne();
+
+        await session.commitTransaction();
+
+        return res.status(StatusCodes.OK).send();
+    } catch (error) {
+        await session.abortTransaction();
+
+        console.error(error);
+
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR)
+            .send({ error: error.message });
+    } finally {
+        await session.endSession();
+    }
+};
 
 export {
     getProperties,
