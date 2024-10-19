@@ -90,6 +90,8 @@ const findProperty = async (req, res) => {
 const createProperty = async (req, res) => {
     const session = await mongoose.startSession();
 
+    session.startTransaction();
+
     try {
         if (respondIfInvalidRequest(req, res)) return;
 
