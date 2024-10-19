@@ -140,9 +140,9 @@ const deleteProperty = async (req, res) => {
 
         req.user.properties.pull(req.property._id);
 
-        await req.user.save();
+        await req.user.save({ session });
 
-        await req.property.deleteOne();
+        await req.property.deleteOne().session(session);
 
         await session.commitTransaction();
 
