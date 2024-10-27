@@ -95,9 +95,9 @@ const createProperty = async (req, res) => {
     try {
         if (respondIfInvalidRequest(req, res)) return;
 
-        configureCloudinary();
-
         const optimizedImagePath = await optimize(req, IMAGE_WIDTH);
+
+        configureCloudinary();
 
         const image = await uploadAndCleanUp(optimizedImagePath, 'properties', req);
 
@@ -124,7 +124,34 @@ const createProperty = async (req, res) => {
     }
 };
 
-const updateProperty = async (req, res) => { };
+const updateProperty = async (req, res) => {
+    try {
+        if (respondIfInvalidRequest(req, res)) return;
+
+        if (req.file) {
+            const optimizedImagePath = await optimize(req, IMAGE_WIDTH);
+
+            configureCloudinary();
+
+            const image = await uploadAndCleanUp(optimizedImagePath, 'properties', req);
+
+            if (req.property.image) {
+                await destroy(req.property.image);
+            }
+
+            await req.property.set({ ...matchedData(req), image }).save();
+        } else {
+            await req.property.set({ ...matchedData(req) });
+        }
+
+        return res.status(StatusCodes.OK).send(req.property);
+    } catch (error) {
+        console.error(error);
+
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR)
+            .send({ error: error.message });
+    }
+};
 
 const deleteProperty = async (req, res) => {
     const session = await mongoose.startSession();

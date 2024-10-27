@@ -14,6 +14,7 @@ import createPropertyRequest from '../requests/createPropertyRequest.js';
 import getPropertiesRequest from '../requests/getPropertiesRequest.js';
 import findPropertyRequest from '../requests/findPropertyRequest.js';
 import checkPropertyOwnership from '../middlewares/checkPropertyOwnership.js';
+import updatePropertyRequest from '../requests/updatePropertyRequest.js';
 
 const router = Router();
 
@@ -31,7 +32,13 @@ router.post('/', [
     handleMulterErrors,
     createPropertyRequest
 ], createProperty);
-router.patch('/:id', updateProperty);
+router.patch('/:id', [
+    authentication,
+    upload.single('image'),
+    handleMulterErrors,
+    updatePropertyRequest,
+    checkPropertyOwnership
+], updateProperty);
 router.delete('/:id', [
     authentication,
     findPropertyRequest,
