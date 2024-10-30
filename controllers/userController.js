@@ -79,7 +79,60 @@ const updateUser = async (req, res) => {
     }
 };
 
+const getUsers = async (req, res) => {
+    try {
+        if (respondIfInvalidRequest(req, res)) return;
+
+        const {
+            page = 1,
+            limit = 10,
+            name = '',
+            email = '',
+            sort = 'createdAt',
+            order = 'desc'
+        } = matchedData(req);
+        const skip = (page - 1) * limit;
+
+        const query = {};
+
+        if (name) {
+            query.name = { $regex: name, $options: 'i' };
+        }
+
+        if (email) {
+            query.email = email;
+        }
+
+        const users = await User.find(query)
+            .skip(skip)
+            .limit(limit)
+            .sort([[sort, order]])
+            .lean();
+
+        if (!users.length) {
+            return res.status(StatusCodes.NOT_FOUND)
+                .send({ error: 'Users not found.' });
+        }
+
+        const total = await User.countDocuments();
+
+        return res.status(StatusCodes.OK).json({
+            total,
+            page,
+            limit,
+            pages: Math.ceil(total/limit),
+            data: users
+        });
+    } catch (error) {
+        console.error(error);
+
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR)
+            .send({ error: error.message });
+    }
+};
+
 export {
     createUser,
-    updateUser
+    updateUser,
+    getUsers
 };
