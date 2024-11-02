@@ -131,8 +131,31 @@ const getUsers = async (req, res) => {
     }
 };
 
+const findUser = async (req, res) => {
+    try {
+        if (respondIfInvalidRequest(req, res)) return;
+
+        const user = await User.findById(req.params.id)
+            .lean()
+            .populate('properties');
+
+        if (! user) {
+            return res.status(StatusCodes.NOT_FOUND)
+                .send({ error: 'User not found.' });
+        }
+
+        return res.status(StatusCodes.OK).json(user);
+    } catch (error) {
+        console.error(error);
+
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR)
+            .send({ error: error.message });
+    }
+}
+
 export {
     createUser,
     updateUser,
-    getUsers
+    getUsers,
+    findUser
 };

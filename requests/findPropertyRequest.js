@@ -1,12 +1,17 @@
 import { param } from 'express-validator';
 
+const validateIdChain = (modelName) => param('id')
+    .trim()
+    .notEmpty()
+    .withMessage(`${modelName} id is required.`)
+    .isMongoId()
+    .withMessage(`${modelName} id must be a valid MongoDB ObjectId`);
+
 const findPropertyRequest = [
-    param('id')
-        .trim()
-        .notEmpty()
-        .withMessage('Property id is required.')
-        .isMongoId()
-        .withMessage('Property id must be a valid MongoDB ObjectId')
+    validateIdChain('Property')
 ];
 
-export default findPropertyRequest;
+export {
+    findPropertyRequest as default,
+    validateIdChain
+};
