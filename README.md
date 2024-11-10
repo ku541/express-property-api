@@ -1,27 +1,17 @@
 # Express Property API
 
-## Endpoints
+A back-end service built with Node.js, Express.js & MongoDB to manage users & properties.
 
-- /api/v1
-    - /users
-        - POST /
-            - validate request
-            - create user
-    - /otp
-        - POST /
-            - validate request
-            - read user by email
-            - create otp
-            - update user
-            - send email
-    - /tokens
-        - POST
-            - validate request
-            - read user by email
-            - verify otp
-            - update user (unset otp)
-            - create jwt
+## User Features
 
-## To Do
+- Register
+- Log in
+- Add properties
+- Browse & update users & properties
+- Delete properties
 
-- [] use native env instead of dotenv
+## Technical Details
+
+- Optimizes user & property images using [sharp](https://sharp.pixelplumbing.com/)
+- Maintains user & property images in [Cloudinary](https://cloudinary.com/documentation)
+- Authenticates users in a passwordless manner
