@@ -1,5 +1,3 @@
-import { param } from 'express-validator';
-
 import { validateIdChain } from './findPropertyRequest.js';
 
 const findUserRequest = [
