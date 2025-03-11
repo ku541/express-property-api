@@ -1,10 +1,10 @@
-import { Router } from 'express';
+const { Router } = require("express");
 
-import { validateEmailChain } from '../requests/createUserRequest.js';
-import createOTP from '../controllers/OTPController.js';
+const { validateEmailChain } = require("../requests/createUserRequest.js");
+const createOTP = require("../controllers/OTPController.js");
 
 const router = Router();
 
-router.post('/', validateEmailChain(), createOTP);
+router.post("/", validateEmailChain(), createOTP);
 
-export default router;
+module.exports = router;

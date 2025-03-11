@@ -1,17 +1,16 @@
-import { validationResult } from 'express-validator';
-import { StatusCodes } from 'http-status-codes';
+const { validationResult } = require("express-validator");
+const { StatusCodes } = require("http-status-codes");
 
 const respondIfInvalidRequest = (req, res) => {
-    const errors = validationResult(req);
+  const errors = validationResult(req);
 
-    if (!errors.isEmpty()) {
-        res.status(StatusCodes.BAD_REQUEST)
-            .json({ errors: errors.array() });
+  if (!errors.isEmpty()) {
+    res.status(StatusCodes.BAD_REQUEST).json({ errors: errors.array() });
 
-        return true;
-    }
+    return true;
+  }
 
-    return false;
-}
+  return false;
+};
 
-export default respondIfInvalidRequest;
+module.exports = respondIfInvalidRequest;

@@ -1,7 +1,5 @@
-import { validateIdChain } from './findPropertyRequest.js';
+const { validateIdChain } = require("./findPropertyRequest.js");
 
-const findUserRequest = [
-    validateIdChain('User')
-];
+const findUserRequest = [validateIdChain("User")];
 
-export default findUserRequest;
+module.exports = findUserRequest;

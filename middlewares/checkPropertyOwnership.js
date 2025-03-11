@@ -1,25 +1,27 @@
-import { StatusCodes } from 'http-status-codes';
+const { StatusCodes } = require("http-status-codes");
 
-import Property from '../mongodb/models/property.js';
+const Property = require("../mongodb/models/property.js");
 
 const checkPropertyOwnership = async (req, res, next) => {
-    const property = await Property.findById(req.params.id);
+  const property = await Property.findById(req.params.id);
 
+  if (!property) {
     if (!property) {
-        if (! property) {
-            return res.status(StatusCodes.NOT_FOUND)
-                .send({ error: 'Property not found.' });
-        }
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .send({ error: "Property not found." });
     }
+  }
 
-    if (!req.user._id.equals(property.owner)) {
-        return res.status(StatusCodes.FORBIDDEN)
-            .send({ error: 'Insufficient permissions.' });
-    }
+  if (!req.user._id.equals(property.owner)) {
+    return res
+      .status(StatusCodes.FORBIDDEN)
+      .send({ error: "Insufficient permissions." });
+  }
 
-    req.property = property;
+  req.property = property;
 
-    next();
-}
+  next();
+};
 
-export default checkPropertyOwnership;
+module.exports = checkPropertyOwnership;

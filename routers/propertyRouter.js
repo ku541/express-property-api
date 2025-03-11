@@ -1,48 +1,50 @@
-import { Router } from 'express';
+const { Router } = require("express");
 
-import {
-    getProperties,
-    findProperty,
-    createProperty,
-    updateProperty,
-    deleteProperty
-} from '../controllers/propertyController.js';
-import authentication from '../middlewares/authentication.js';
-import { upload } from '../helpers/image.js';
-import handleMulterErrors from '../middlewares/handleMulterErrors.js';
-import createPropertyRequest from '../requests/createPropertyRequest.js';
-import getPropertiesRequest from '../requests/getPropertiesRequest.js';
-import findPropertyRequest from '../requests/findPropertyRequest.js';
-import checkPropertyOwnership from '../middlewares/checkPropertyOwnership.js';
-import updatePropertyRequest from '../requests/updatePropertyRequest.js';
+const {
+  getProperties,
+  findProperty,
+  createProperty,
+  updateProperty,
+  deleteProperty,
+} = require("../controllers/propertyController.js");
+const authentication = require("../middlewares/authentication.js");
+const { upload } = require("../helpers/image.js");
+const handleMulterErrors = require("../middlewares/handleMulterErrors.js");
+const createPropertyRequest = require("../requests/createPropertyRequest.js");
+const { getPropertiesRequest } = require("../requests/getPropertiesRequest.js");
+const { findPropertyRequest } = require("../requests/findPropertyRequest.js");
+const checkPropertyOwnership = require("../middlewares/checkPropertyOwnership.js");
+const updatePropertyRequest = require("../requests/updatePropertyRequest.js");
 
 const router = Router();
 
-router.get('/', [
+router.get("/", [authentication, getPropertiesRequest], getProperties);
+router.get("/:id", [authentication, findPropertyRequest], findProperty);
+router.post(
+  "/",
+  [
     authentication,
-    getPropertiesRequest
-], getProperties);
-router.get('/:id', [
-    authentication,
-    findPropertyRequest
-], findProperty);
-router.post('/', [
-    authentication,
-    upload.single('image'),
+    upload.single("image"),
     handleMulterErrors,
-    createPropertyRequest
-], createProperty);
-router.patch('/:id', [
+    createPropertyRequest,
+  ],
+  createProperty
+);
+router.patch(
+  "/:id",
+  [
     authentication,
-    upload.single('image'),
+    upload.single("image"),
     handleMulterErrors,
     updatePropertyRequest,
-    checkPropertyOwnership
-], updateProperty);
-router.delete('/:id', [
-    authentication,
-    findPropertyRequest,
-    checkPropertyOwnership
-], deleteProperty);
+    checkPropertyOwnership,
+  ],
+  updateProperty
+);
+router.delete(
+  "/:id",
+  [authentication, findPropertyRequest, checkPropertyOwnership],
+  deleteProperty
+);
 
-export default router;
+module.exports = router;

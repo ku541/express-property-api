@@ -1,19 +1,18 @@
-import { body } from 'express-validator';
+const { body } = require("express-validator");
 
-import { validateEmailChain } from './createUserRequest.js';
-import { MIN_OTP } from '../mongodb/models/user.js';
-import { MAX_OTP } from '../mongodb/models/user.js';
+const { validateEmailChain } = require("./createUserRequest.js");
+const { MIN_OTP, MAX_OTP } = require("../mongodb/models/user.js");
 
 const createTokenRequest = [
-    validateEmailChain(),
-    body('otp')
-        .trim()
-        .notEmpty()
-        .withMessage('OTP is required.')
-        .isString()
-        .withMessage('OTP must be a string.')
-        .isInt({ min: MIN_OTP, max: MAX_OTP })
-        .withMessage(`OTP must be an integer between ${MIN_OTP} & ${MAX_OTP}`)
+  validateEmailChain(),
+  body("otp")
+    .trim()
+    .notEmpty()
+    .withMessage("OTP is required.")
+    .isString()
+    .withMessage("OTP must be a string.")
+    .isInt({ min: MIN_OTP, max: MAX_OTP })
+    .withMessage(`OTP must be an integer between ${MIN_OTP} & ${MAX_OTP}`),
 ];
 
-export default createTokenRequest;
+module.exports = createTokenRequest;
