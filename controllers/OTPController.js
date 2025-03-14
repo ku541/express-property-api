@@ -1,9 +1,9 @@
 const { matchedData } = require("express-validator");
 const { StatusCodes } = require("http-status-codes");
 
-const respondIfInvalidRequest = require("../helpers/validation");
+const respondIfInvalidRequest = require("../helpers/validation.js");
 const { User } = require("../mongodb/models/user.js");
-const sendOTPMail = require("../helpers/mail");
+const sendOTPMail = require("../helpers/mail.js");
 
 const createOTP = async (req, res) => {
   try {
