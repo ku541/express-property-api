@@ -9,10 +9,6 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-transporter.verify((error, success) => {
-  if (error) {
-    throw new Error(error);
-  }
-});
+async () => await transporter.verify();
 
 module.exports = transporter;

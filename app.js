@@ -8,7 +8,7 @@ const userRouter = require("./routers/userRouter.js");
 const OTPRouter = require("./routers/OTPRouter.js");
 const tokenRouter = require("./routers/tokenRouter.js");
 const propertyRouter = require("./routers/propertyRouter.js");
-const connect = require("./mongodb/connect.js");
+const { connect } = require("./mongodb/connect.js");
 
 const app = express();
 

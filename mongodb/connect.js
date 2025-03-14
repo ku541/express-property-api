@@ -14,4 +14,6 @@ const connect = async (host, port, db) => {
   }
 };
 
-module.exports = connect;
+const disconnect = async () => await mongoose.disconnect();
+
+module.exports = { connect, disconnect };
