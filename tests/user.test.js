@@ -5,26 +5,22 @@ const app = require("../app.js");
 
 const { User } = require("../mongodb/models/user.js");
 const { disconnect } = require("../mongodb/connect.js");
-
-const jane = { name: "Jane Doe", email: "jane@example.com" };
-
-const setUpUsers = async () => {
-  await User.deleteMany();
-
-  await User.create(jane);
-};
+const { jane, john, setUpUsers } = require("./fixtures/user.js");
 
 beforeEach(setUpUsers);
 
 test("registers a new user", async () => {
   const response = await request(app)
     .post("/api/v1/users")
-    .send({ name: "John Doe", email: "john@example.com" })
+    .send(john)
     .expect(StatusCodes.CREATED);
 
   expect(response.body).not.toHaveProperty("otp");
 
-  const registeredUser = await User.findById(response.body._id);
+  const registeredUser = await User.findOne({
+    id: response.body._id,
+    email: john.email,
+  });
 
   expect(registeredUser).not.toBe(null);
 });
