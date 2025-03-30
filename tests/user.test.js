@@ -2,7 +2,6 @@ const request = require("supertest");
 const { StatusCodes } = require("http-status-codes");
 
 const app = require("../app.js");
-
 const { User } = require("../mongodb/models/user.js");
 const { disconnect } = require("../mongodb/connect.js");
 const { jane, john, setUpUsers } = require("./fixtures/user.js");
