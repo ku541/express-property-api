@@ -32,7 +32,7 @@ const createToken = async (req, res) => {
     }
 
     if (Number(validated.otp) !== user.otp.code) {
-      res.status(StatusCodes.BAD_REQUEST).json({ error: "Invalid OTP" });
+      return res.status(StatusCodes.BAD_REQUEST).send({ error: "Invalid OTP" });
     }
 
     await User.updateOne({ _id: user._id }, { $unset: { otp: 1 } });
