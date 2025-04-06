@@ -1,6 +1,5 @@
 const { matchedData } = require("express-validator");
 const { StatusCodes } = require("http-status-codes");
-const { SignJWT } = require("jose");
 
 const respondIfInvalidRequest = require("../helpers/validation.js");
 const { User } = require("../mongodb/models/user.js");
@@ -37,13 +36,7 @@ const createToken = async (req, res) => {
 
     await User.updateOne({ _id: user._id }, { $unset: { otp: 1 } });
 
-    const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-
-    const token = await new SignJWT({ _id: user._id })
-      .setProtectedHeader({ alg: process.env.JWT_ALGORITHM })
-      .setIssuedAt()
-      .setExpirationTime(process.env.JWT_EXPIRATION)
-      .sign(secret);
+    const token = await user.generateToken();
 
     res.status(StatusCodes.CREATED).json({ token });
   } catch (error) {

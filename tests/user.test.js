@@ -33,4 +33,15 @@ test("does not register an existing user", async () => {
   expect(response.body).toHaveProperty("error");
 });
 
+test("finds a user", async () => {
+  const existingUser = await User.findOne(jane);
+
+  const token = await existingUser.generateToken();
+
+  await request(app)
+    .get(`/api/v1/users/${existingUser._id}`)
+    .set("Authorization", `Bearer ${token}`)
+    .expect(StatusCodes.OK);
+});
+
 afterAll(disconnect);

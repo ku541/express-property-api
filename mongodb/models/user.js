@@ -1,6 +1,7 @@
 const { randomInt } = require("node:crypto");
 
 const mongoose = require("mongoose");
+const { SignJWT } = require("jose");
 
 const MIN_OTP = 100000;
 const MAX_OTP = 999999;
@@ -55,6 +56,16 @@ userSchema.methods.generateOTP = function () {
   this.otp = { code, expiresAt };
 
   return this;
+};
+
+userSchema.methods.generateToken = async function () {
+  const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+
+  return await new SignJWT({ _id: this._id })
+    .setProtectedHeader({ alg: process.env.JWT_ALGORITHM })
+    .setIssuedAt()
+    .setExpirationTime(process.env.JWT_EXPIRATION)
+    .sign(secret);
 };
 
 const User = mongoose.model("User", userSchema);
