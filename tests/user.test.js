@@ -38,10 +38,29 @@ test("finds a user", async () => {
 
   const token = await existingUser.generateToken();
 
-  await request(app)
+  const response = await request(app)
     .get(`/api/v1/users/${existingUser._id}`)
     .set("Authorization", `Bearer ${token}`)
     .expect(StatusCodes.OK);
+
+  expect(response.body._id).toBe(existingUser.id);
+});
+
+test("gets all users", async () => {
+  const existingUser = await User.findOne(jane);
+
+  const token = await existingUser.generateToken();
+
+  const response = await request(app)
+    .get("/api/v1/users")
+    .set("Authorization", `Bearer ${token}`)
+    .expect(StatusCodes.OK);
+
+  expect(response.body).toHaveProperty("total");
+  expect(response.body).toHaveProperty("page");
+  expect(response.body).toHaveProperty("limit");
+  expect(response.body).toHaveProperty("pages");
+  expect(response.body).toHaveProperty("data");
 });
 
 afterAll(disconnect);
