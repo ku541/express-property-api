@@ -63,4 +63,19 @@ test("gets all users", async () => {
   expect(response.body).toHaveProperty("data");
 });
 
+test("updates user", async () => {
+  const newName = "Jane Eyre";
+  const existingUser = await User.findOne(jane);
+
+  const token = await existingUser.generateToken();
+
+  const response = await request(app)
+    .patch("/api/v1/users")
+    .set("Authorization", `Bearer ${token}`)
+    .send({ name: newName })
+    .expect(StatusCodes.OK);
+
+  expect(response.body.name).toBe(newName);
+});
+
 afterAll(disconnect);

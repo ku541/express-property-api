@@ -43,8 +43,6 @@ const updateUser = async (req, res) => {
   try {
     if (respondIfInvalidRequest(req, res)) return;
 
-    const { name, email } = req.body;
-
     if (req.file) {
       const optimizedAvatarPath = await optimize(req, AVATAR_WIDTH);
 
@@ -60,9 +58,9 @@ const updateUser = async (req, res) => {
         await destroy(req.user.avatar);
       }
 
-      await req.user.set({ name, email, avatar }).save();
+      await req.user.set({ ...matchedData(req), avatar }).save();
     } else {
-      await req.user.set({ name, email }).save();
+      await req.user.set({ ...matchedData(req) }).save();
     }
 
     return res.status(StatusCodes.OK).send(req.user);
