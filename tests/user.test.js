@@ -63,7 +63,7 @@ test("gets all users", async () => {
   expect(response.body).toHaveProperty("data");
 });
 
-test("updates user", async () => {
+test("updates a user", async () => {
   const newName = "Jane Eyre";
   const existingUser = await User.findOne(jane);
 
